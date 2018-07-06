@@ -1,17 +1,23 @@
 # Satellite-Log-Data-Analysis
 Performance and Scale team Red Hat
-## Tool
 
-This tool is created for getting all the data related to a consumer-id in Satellite logs.<br>
+This tool is created for getting all the data related to a consumer-id and for analizing data in Satellite logs.<br>
 
+### For consumer-id tool
 We can print all the data related to all the consumer-ids using:
 ```
-python3 tool.py -all
+python3 main.py -all
 ```
 Or print data related to a particular consumer-id:
 ```
-python3 tool.py --consumer-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+python3 main.py --consumer-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
+### For analize tool 
+```
+python3 main.py --analize
+```
+
+## Consumer-id Tool
 
 We are not reading data directly from a file, we are using filebeat to read data from log files and pass it to logstash which later passes it to ElasticSearch where it get indexed in syntaxed JSON.<br>
 We are reading that indexed data in ElasticSearch using <b>elasticsearch-py API</b>. There is a limit to elasticsearch, it can only read maximum of 10000 lines at most at a time. So, for this we are using <b>scroll API</b>. We are scrolling all the data in elasticsearch for 10 minutes at a rate of 10000 at a time.
@@ -50,18 +56,18 @@ After finding lines with csid, we are finding all the csid and grouping all the 
 ### All log data related to a particular consumer-id with different csid(s)
 ![consumer-id](https://user-images.githubusercontent.com/20038775/42320853-7a79fad2-8074-11e8-8188-6e7a4518e969.png)
 
-## Production_es
+## Analize Tool
 This tool is related to fetching particular data such as <b>ActiveRecord, Views, totaltime, ID, etc</b> from production.log indexed data in ElasticSearch. We are getting data directly from ElasticSearch instead of a log file.<br>
 
 After getting all the required data, we are formatting it in JSON format so as to be later used in a script to create new index in ElasticSearch which is later displayed in the form of visualizations on Kibana. [production_es.json](https://github.com/ritwik12/Satellite-Log-Data-Analysis/blob/master/Production_es/production_es.json) consists of the output JSON form data.
 
-### production_es.json
+### analize.json
 
 ![production_es_json](https://user-images.githubusercontent.com/20038775/42321525-ebff09ac-8076-11e8-9a61-5dd45f2cdfaf.png)
 
 After getting all the data in json format we are creating a new index in ElasticSearch which can be seen on Kibana.
 
-### Production_es Index
+### Analize Index
 
 ![kibana index](https://user-images.githubusercontent.com/20038775/42321630-443ac228-8077-11e8-8c1e-ce15e22f97d4.png)
 
