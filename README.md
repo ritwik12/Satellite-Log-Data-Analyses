@@ -16,7 +16,16 @@ python3 main.py --consumer-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 python3 main.py --analize
 ```
-
+### For specific time range
+```
+python3 main.py -all 2018-05-27T03:32:27 2018-07-01T05:13:36
+```
+```
+python3 main.py --consumer-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 2018-05-27T03:32:27 2018-07-01T05:13:36
+```
+```
+python3 main.py --analize 2018-05-27T03:32:27 2018-07-01T05:13:36
+```
 ## Consumer-id Tool
 
 We are not reading data directly from a file, we are using filebeat to read data from log files and pass it to logstash which later passes it to ElasticSearch where it get indexed in syntaxed JSON.<br>
