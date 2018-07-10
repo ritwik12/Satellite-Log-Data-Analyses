@@ -6,7 +6,7 @@ This tool is created for getting all the data related to a consumer-id and for a
 ### For consumer-id tool
 We can print all the data related to all the consumer-ids using:
 ```
-python3 main.py -all
+python3 main.py --all
 ```
 Or print data related to a particular consumer-id:
 ```
@@ -18,7 +18,7 @@ python3 main.py --analize
 ```
 ### For specific time range
 ```
-python3 main.py -all 2018-05-27T03:32:27 2018-07-01T05:13:36
+python3 main.py --all 2018-05-27T03:32:27 2018-07-01T05:13:36
 ```
 ```
 python3 main.py --consumer-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 2018-05-27T03:32:27 2018-07-01T05:13:36
