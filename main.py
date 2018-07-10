@@ -17,7 +17,10 @@ if "--all" in sys.argv or "--consumer-id" or "--analyze" in sys.argv:
         time1 = sys.argv[3] # Starting time of time range
         time2 = sys.argv[4] # Ending time of time range
     # scroll 10000 lines per scroll of all data for 10m, using maximum value for size i.e 10000 
-    res = es.search(index="file1",scroll="10m", size="10000", body={"query": {"range" : {"@timestamp" : {"gte": time1,"lte": time2}}}})
+    if len(sys.argv)>3:
+        res = es.search(index="file1",scroll="10m", size="10000", body={"query": {"range" : {"@timestamp" : {"gte": time1,"lte": time2}}}})
+    else:
+        res = es.search(index="file1",scroll="10m", size="10000", body={"query": {"match_all": {}}})
     # scroll id to mark scroll
     sid = res['_scroll_id']
     scroll_size = res['hits']['total']
