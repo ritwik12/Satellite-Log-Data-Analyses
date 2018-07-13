@@ -6,8 +6,8 @@ import time
 # progress bar
 from tqdm import tqdm
 
-# Run the code only if the arguments passed are --all or --consumer-id
-if "--all" in sys.argv or "--consumer-id" or "--analyze" in sys.argv:
+# Run the code only if the argument passed is --all, --trace, --analize or --consumer-id
+if [x for x in ["--all", "--consumer-id", "--trace", "--analize"] if x in sys.argv]:
     start = timeit.default_timer()
     es = Elasticsearch()
     if len(sys.argv)==4:
@@ -18,9 +18,9 @@ if "--all" in sys.argv or "--consumer-id" or "--analyze" in sys.argv:
         time2 = sys.argv[4] # Ending time of time range
     # scroll 10000 lines per scroll of all data for 10m, using maximum value for size i.e 10000 
     if len(sys.argv)>3:
-        res = es.search(index="file1",scroll="10m", size="10000", body={"query": {"range" : {"@timestamp" : {"gte": time1,"lte": time2}}}})
+        res = es.search(index="file3",scroll="10m", size="10000", body={"query": {"range" : {"@timestamp" : {"gte": time1,"lte": time2}}}})
     else:
-        res = es.search(index="file1",scroll="10m", size="10000", body={"query": {"match_all": {}}})
+        res = es.search(index="file3",scroll="10m", size="10000", body={"query": {"match_all": {}}})
     # scroll id to mark scroll
     sid = res['_scroll_id']
     scroll_size = res['hits']['total']
@@ -28,6 +28,7 @@ if "--all" in sys.argv or "--consumer-id" or "--analyze" in sys.argv:
     ID= ""
     csid=""
     data={}
+    trace_line = []
     if "--analize" in sys.argv:
         file =open("analize.json","w")
     if "--consumer-id" in sys.argv:
@@ -68,9 +69,14 @@ if "--all" in sys.argv or "--consumer-id" or "--analyze" in sys.argv:
                     json = """{"index":{"_index":"production","_id":"""+'"'+str(i-1)+'"'+"""}} \n {"time":"""+'"'+log_time+'"'+""","Totaltime":"""+'"'+totaltime+'"'+""","ID ":"""+'"'+id+'"'+""","Views":"""+'"'+Views+'"'+""","ActiveRecord":"""+'"'+ActiveRecord+'"'+"}"+"\n"
                     # Write JSON formatted data to production_es.json
                     file.write(json)
+            # Trace errors and warnings        
+            elif "--trace" in sys.argv and log_line.find("production.log")!=-1:
+                if line.find("[W")!=-1 or line.find("[E")!=-1:
+                    if line not in trace_line:
+                        trace_line.append(line)        
             # For consumer-id tool        
-            elif "--all" or "--consumer-id" in sys.argv:
-                 # Find all the consumer ids present in ElasticSearch
+            elif [x for x in ["--all", "--consumer-id"] if x in sys.argv]:
+                # Find all the consumer ids present in ElasticSearch
                 consumer_id=re.search('[-a-zA-Z0-9]{36}', log_line)
                 # For production.log realated data only 
                 if consumer_id and log_line.find("production.log")!=-1:
@@ -101,13 +107,22 @@ if "--all" in sys.argv or "--consumer-id" or "--analyze" in sys.argv:
                                 else:
                                     # Adding message lines as valeus in dictionary i.e data related to their respective csid
                                     data[csid] = [data[csid],line]
-    if "--all" or "--consumer-id" in sys.argv:
+    if [x for x in ["--all", "--consumer-id"] if x in sys.argv]:
         for key,value in data.items():
             print("-------------------------------------------------------------------------------------------------------")
             print("CSID ->",key,"\n \n")
             print(str(value).replace(", '","\n \n").strip("[").strip("'").strip("]"),"\n \n")
             print("-------------------------------------------------------------------------------------------------------")
+    elif "--trace" in sys.argv:
+        for i in range(len(trace_line)):
+            print("-------------------------------------------------------------------------------------------------------")
+            print(trace_line[i])
+            print("------------------------------------------------------------------------------------------------------- \n \n")
+    elif "--analize" in sys.argv:
+        print("-------------------------------------------------------------------------------------------------------")
+        print("analize.json created successfully")
+        print("-------------------------------------------------------------------------------------------------------")
     stop = timeit.default_timer()
     print(stop - start) 
 else:
-    print("Wrong choice of arguments, Please use --all or --consumer-id")
+    print("Wrong choice of arguments, Please choose from --all, --trace, --analize or --consumer-id")
