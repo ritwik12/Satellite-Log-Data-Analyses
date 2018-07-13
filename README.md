@@ -16,21 +16,23 @@ python3 main.py --consumer-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 python3 main.py --analize
 ```
+### For trace tool
+```
+python3 main.py --trace
+```
 ### For specific time range
 ```
-python3 main.py --all 2018-05-27T03:32:27 2018-07-01T05:13:36
+python3 main.py --all 2018-05-27T03:32:27 2018-07-01T05:13:36 2018-07-02T03:32:27 2018-07-13T15:13:36
 ```
 ```
-python3 main.py --consumer-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 2018-05-27T03:32:27 2018-07-01T05:13:36
+python3 main.py --consumer-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 2018-07-02T03:32:27 2018-07-13T15:13:36
 ```
 ```
-python3 main.py --analize 2018-05-27T03:32:27 2018-07-01T05:13:36
+python3 main.py --analize 2018-07-02T03:32:27 2018-07-13T15:13:36
 ```
-## Consumer-id Tool
-
-We are not reading data directly from a file, we are using filebeat to read data from log files and pass it to logstash which later passes it to ElasticSearch where it get indexed in syntaxed JSON.<br>
-We are reading that indexed data in ElasticSearch using <b>elasticsearch-py API</b>. There is a limit to elasticsearch, it can only read maximum of 10000 lines at most at a time. So, for this we are using <b>scroll API</b>. We are scrolling all the data in elasticsearch for 10 minutes at a rate of 10000 at a time.
-
+```
+python3 main.py --trace 2018-07-02T03:32:27 2018-07-13T15:13:36
+```
 ### Requirements
 Install [ElasticSearch](https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/index.html) API of Python
 ```
@@ -40,6 +42,11 @@ Install [tqdm](https://pypi.org/project/tqdm/) for progress bar
 ```
 pip install tqdm
 ```
+## Consumer-id Tool
+
+We are not reading data directly from a file, we are using filebeat to read data from log files and pass it to logstash which later passes it to ElasticSearch where it get indexed in syntaxed JSON.<br>
+We are reading that indexed data in ElasticSearch using <b>elasticsearch-py API</b>. There is a limit to elasticsearch, it can only read maximum of 10000 lines at most at a time. So, for this we are using <b>scroll API</b>. We are scrolling all the data in elasticsearch for 10 minutes at a rate of 10000 at a time.
+
 The flow of data is from a consumer-id in production.log to candlepin.log of Satellite logs.
 
 ### Production.log
@@ -92,3 +99,7 @@ After getting all the data in json format we are creating a new index in Elastic
 
 ![totaltime](https://user-images.githubusercontent.com/20038775/42321853-f6486eb6-8077-11e8-917f-53e18ba07ca0.png)
 
+## Trace tool
+Able to display the trace records for stack traces that may appear in production.log. It is able to handle multiline logs also.
+
+![trace](https://user-images.githubusercontent.com/20038775/42684935-3613a4d8-86af-11e8-9366-1001c266860b.png)
