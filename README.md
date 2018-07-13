@@ -101,5 +101,44 @@ After getting all the data in json format we are creating a new index in Elastic
 
 ## Trace tool
 Able to display the trace records for stack traces that may appear in production.log. It is able to handle multiline logs also.
+Warnings and Errors are multiline logs, Filebeat or Logstash can not read multiline logs as a single log message. They split a single multiline message into different messages.
 
+### Logstash and Filebeat Configuration to read multiline log messages.
+#### Filebeat
+
+- [Manage multiline messages](https://www.elastic.co/guide/en/beats/filebeat/current/multiline-examples.html)<br>
+- [Examples of multiline configuration](https://www.elastic.co/guide/en/beats/filebeat/current/_examples_of_multiline_configuration.html#_examples_of_multiline_configuration)
+
+```
+### Multiline options
+
+  # Mutiline can be used for log messages spanning multiple lines. This is common
+  # for Java Stack Traces or C-Line Continuation
+
+  # The regexp Pattern that has to be matched. The example pattern matches all lines starting with [
+  multiline.pattern: '^\/'
+
+  # Defines if the pattern set under pattern should be negated or not. Default is false.
+  multiline.negate: false
+
+  # Match can be set to "after" or "before". It is used to define if lines should be append to a pattern
+  # that was (not) matched before or after or as long as a pattern is not matched based on negate.
+  # Note: After is the equivalent to previous and before is the equivalent to to next in Logstash
+  multiline.match: after
+```
+#### Logstash
+
+- [Multiline codec plugin](https://www.elastic.co/guide/en/logstash/current/plugins-codecs-multiline.html)
+```
+input {
+  stdin {
+    codec => multiline {
+      pattern => "pattern, a regexp"
+      negate => "true" or "false"
+      what => "previous" or "next"
+    }
+  }
+}
+```
+### Traced Records  
 ![trace](https://user-images.githubusercontent.com/20038775/42684935-3613a4d8-86af-11e8-9366-1001c266860b.png)
