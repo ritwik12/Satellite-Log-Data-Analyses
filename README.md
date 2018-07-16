@@ -22,7 +22,7 @@ python3 main.py --trace
 ```
 ### For specific time range
 ```
-python3 main.py --all 2018-05-27T03:32:27 2018-07-02T03:32:27 2018-07-13T16:13:36
+python3 main.py --all 2018-07-02T03:32:27 2018-07-13T16:13:36
 ```
 ```
 python3 main.py --consumer-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 2018-07-02T03:32:27 2018-07-13T16:13:36
