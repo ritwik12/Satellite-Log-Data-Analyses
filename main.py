@@ -22,16 +22,16 @@ def analize(log_line,line,i):
         # Extract ActiveRecord
         ActiveRecord = line[line.find("ActiveRecord")+14: line.find("ActiveRecord")+20]
         # Store data in JSON format to be indexed in ElasticSearch
-        print("---------------------------------------------------------------------------------------------------------")
         analize_data = "ID:"+id+" "+"Time:"+log_time+" "+"Totaltime:"+totaltime+" "+"Views:"+Views+" "+"ActiveRecord:"+ActiveRecord
-        print("---------------------------------------------------------------------------------------------------------")
         if "json" in sys.argv:
             json = """{"index":{"_index":"production","_id":"""+'"'+str(i-1)+'"'+"""}} \n {"ID ":"""+'"'+id+'"'+""","Time":"""+'"'+log_time+'"'+""","Totaltime":"""+'"'+totaltime+'"'+""","Views":"""+'"'+Views+'"'+""","ActiveRecord":"""+'"'+ActiveRecord+'"'+"}"+"\n"
             # Write JSON formatted data to analize.json
             file.write(json)
         else:
-            print(analize_data)   
-
+            print("---------------------------------------------------------------------------------------------------------")
+            print(analize_data)
+            print("---------------------------------------------------------------------------------------------------------")
+            
 # For trace tool
 def trace(line, trace_line):
     if line.find("[W")!=-1 or line.find("[E")!=-1:
