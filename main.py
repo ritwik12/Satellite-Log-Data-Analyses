@@ -29,9 +29,9 @@ def analize(log_line,line,i):
             file.write(json)
         else:
             print("---------------------------------------------------------------------------------------------------------")
-            print(analize_data)
+            print(analize_data)   
             print("---------------------------------------------------------------------------------------------------------")
-            
+
 # For trace tool
 def trace(line, trace_line):
     if line.find("[W")!=-1 or line.find("[E")!=-1:
@@ -52,16 +52,15 @@ def all(line, data):
 
 # For consumer-id tool with specific log data corresponding to a particular consumer-id
 def consumer(log_line, line, data):
-    if log_line.find(id)!=-1:
-        if line.find("csid")!=-1:
-            csid = line[line.find("csid")+5:line.find("csid")+13]
-            if csid!="" and csid.find("]")==-1 and len(csid)==8:
-                if csid not in data: 
-                    # Adding csid as keys in dictionary i.e data
-                    data.update({csid:line})
-                else:
-                    # Adding message lines as values in dictionary i.e data related to their respective csid
-                    data[csid] = [data[csid],line]
+    if log_line.find(id)!=-1 and line.find("csid")!=-1:
+        csid = line[line.find("csid")+5:line.find("csid")+13]
+        if csid!="" and csid.find("]")==-1 and len(csid)==8:
+            if csid not in data: 
+                # Adding csid as keys in dictionary i.e data
+                data.update({csid:line})
+            else:
+                # Adding message lines as values in dictionary i.e data related to their respective csid
+                data[csid] = [data[csid],line]
 
 if __name__ == '__main__':
     # Run the code only if the argument passed is --all, --trace, --analize or --consumer-id
