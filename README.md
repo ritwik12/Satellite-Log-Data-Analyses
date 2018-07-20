@@ -33,6 +33,10 @@ python3 main.py --analize 2018-07-02T03:32:27 2018-07-13T16:13:36
 ```
 python3 main.py --trace 2018-07-02T03:32:27 2018-07-13T16:13:36
 ```
+### Unit tests
+```
+py.test Tests.py 
+```
 ### Requirements
 Install [ElasticSearch](https://www.elastic.co/guide/en/elasticsearch/client/python-api/current/index.html) API of Python
 ```
