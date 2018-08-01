@@ -7,8 +7,8 @@ import time
 from tqdm import tqdm
 
 
-# For analize tool
-def analize(log_line, line, i):
+# For analyse tool
+def analyse(log_line, line, i):
     # For production.log realated data only containing "Views"
     if log_line.find("production.log") != -1 and line.find("Views") != -1:
         i = i+1
@@ -23,16 +23,16 @@ def analize(log_line, line, i):
         # Extract ActiveRecord
         ActiveRecord = line[line.find("ActiveRecord")+14: line.find("ActiveRecord")+20]
         # Store data in JSON format to be indexed in ElasticSearch
-        analize_data = "ID:"+id+" "+"Time:"+log_time+" "+"Totaltime:"+totaltime+" "+"Views:"+Views+" "+"ActiveRecord:"+ActiveRecord
+        analyse_data = "ID:"+id+" "+"Time:"+log_time+" "+"Totaltime:"+totaltime+" "+"Views:"+Views+" "+"ActiveRecord:"+ActiveRecord
         if "json" in sys.argv:
             json = """{"index":{"_index":"production","_id":"""+'"'+str(i-1)+'"'+"""}} \n {"ID ":"""+'"'+id+'"'+""","Time":"""+'"'+log_time+'"'+""","Totaltime":"""+'"'+totaltime+'"'+""","Views":"""+'"'+Views+'"'+""","ActiveRecord":"""+'"'+ActiveRecord+'"'+"}"+"\n"
-            # Write JSON formatted data to analize.json
+            # Write JSON formatted data to analyse.json
             file.write(json)
         else:
             print("---------------------------------------------------------------------------------------------------------")
-            print(analize_data)
+            print(analyse_data)
             print("---------------------------------------------------------------------------------------------------------")
-    #return analize_data  # uncomment for unit tests
+    #return analyse_data  # uncomment for unit tests
 
 
 # For trace tool
@@ -72,8 +72,8 @@ def all(line, data):
 
 
 if __name__ == '__main__':
-    # Run the code only if the argument passed is --all, --trace, --analize or --consumer-id
-    if [x for x in ["--all", "--consumer-id", "--trace", "--analize"] if x in sys.argv]:
+    # Run the code only if the argument passed is --all, --trace, --analyse or --consumer-id
+    if [x for x in ["--all", "--consumer-id", "--trace", "--analyse"] if x in sys.argv]:
         start = timeit.default_timer()
         es = Elasticsearch()
         if len(sys.argv) == 4:
@@ -95,8 +95,8 @@ if __name__ == '__main__':
         count = 0
         csid = ""
         trace_line = []
-        if "--analize" in sys.argv:
-            file = open("analize.json", "w")
+        if "--analyse" in sys.argv:
+            file = open("analyse.json", "w")
         if "--consumer-id" in sys.argv:
             # Fetch consumer-id from second argument passed
             id = sys.argv[2]
@@ -116,9 +116,9 @@ if __name__ == '__main__':
                 log_line = "%s)%s" % (doc['_source']['source'], doc['_source']['message'])
                 # Extract lines consisting only message from log lines
                 line = "%s" % (doc['_source']['message'])
-                # For analize tool
-                if "--analize" in sys.argv:
-                    analize(log_line, line, i)
+                # For analyse tool
+                if "--analyse" in sys.argv:
+                    analyse(log_line, line, i)
                 # Trace errors and warnings
                 elif "--trace" in sys.argv and log_line.find("production.log") != -1:
                     trace(line, trace_line)
@@ -149,11 +149,11 @@ if __name__ == '__main__':
                 print("-------------------------------------------------------------------------------------------------------")
                 print(trace_line[i])
                 print("------------------------------------------------------------------------------------------------------- \n \n")
-        elif "--analize" in sys.argv:
+        elif "--analyse" in sys.argv:
             print("-------------------------------------------------------------------------------------------------------")
-            print("analize.json created successfully")
+            print("analyse.json created successfully")
             print("-------------------------------------------------------------------------------------------------------")
         stop = timeit.default_timer()
         print(stop - start)
     else:
-        print("Wrong choice of arguments, Please choose from --all, --trace, --analize or --consumer-id")
+        print("Wrong choice of arguments, Please choose from --all, --trace, --analyse or --consumer-id")
