@@ -2,7 +2,7 @@ import sys
 id = set([])
 views = ""
 lines = tuple(open("production.log", 'r'))
-file =open("production.json","w") 
+file =open("analyse.json","w") 
 for i in range(1, len(lines)):
 	line = lines[i]
 	if line.find("Views")!=-1:
@@ -15,7 +15,7 @@ for i in range(1, len(lines)):
 		analyse_data = "ID:"+id+" "+"Time:"+log_time+" "+"Totaltime:"+totaltime+" "+"Views:"+Views+" "+"ActiveRecord:"+ActiveRecord
 		if "json" in sys.argv:
 			json = """{"index":{"_index":"production","_id":"""+'"'+str(i-1)+'"'+"""}} \n {"ID ":"""+'"'+id+'"'+""","Time":"""+'"'+log_time+'"'+""","Totaltime":"""+'"'+totaltime+'"'+""","Views":"""+'"'+Views+'"'+""","ActiveRecord":"""+'"'+ActiveRecord+'"'+"}"+"\n"
-            # Write JSON formatted data to analyse.json
+            		# Write JSON formatted data to analyse.json
 			file.write(json)
 		else:
 			print("---------------------------------------------------------------------------------------------------------")
