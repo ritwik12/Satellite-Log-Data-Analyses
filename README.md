@@ -1,7 +1,7 @@
 # Satellite-Log-Data-Analysis
 Performance and Scale team Red Hat
 
-This tool is created for getting all the data related to a consumer-id and for analizing data in Satellite logs.<br>
+This tool is created for getting all the data related to a consumer-id and for analysing data in Satellite logs.<br>
 
 ### For consumer-id tool
 We can print all the data related to all the consumer-ids using:
