@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 # For analyse tool
 def analyse(log_line, line, i):
-    # For production.log realated data only containing "Views"
+    # For production.log related data only containing "Views"
     if log_line.find("production.log") != -1 and line.find("Views") != -1:
         i = i+1
         # Extract ID
@@ -126,11 +126,11 @@ if __name__ == '__main__':
                 elif [x for x in ["--all", "--consumer-id"] if x in sys.argv]:
                     # Find all the consumer ids present in ElasticSearch
                     consumer_id = re.search('[-a-zA-Z0-9]{36}', log_line)
-                    # For production.log realated data only
+                    # For production.log related data only
                     if consumer_id and log_line.find("production.log") != -1:
                         # Extract consumer id from a line
                         ID = log_line[consumer_id.start(): consumer_id.end()]
-                    # For candlepin.log realated data only
+                    # For candlepin.log related data only
                     if log_line.find("candlepin.log") != -1 and ID != "":
                         # Find data for a particular consumer id
                         if "--consumer-id" in sys.argv:
