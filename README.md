@@ -52,6 +52,16 @@ Install [tqdm](https://pypi.org/project/tqdm/) for progress bar
 ```
 pip install tqdm
 ```
+
+### Setup
+
+Tools can be used by setting up few things:
+
+#### Install ELK stack with Filebeats
+
+ElasticSearch is needed with log data indexed in it. It could be done by using [this example](https://github.com/ritwik12/ansible-playbook-ELK) or follow [installation guide](https://www.elastic.co/guide/en/elastic-stack/current/installing-elastic-stack.html)
+
+
 ## Consumer-id Tool
 
 We are not reading data directly from a file, we are using filebeat to read data from log files and pass it to logstash which later passes it to ElasticSearch where it get indexed in syntaxed JSON.<br>
