@@ -64,8 +64,9 @@ ElasticSearch is needed with log data indexed in it. It could be done by using [
 
 ## Consumer-id Tool
 
-We are not reading data directly from a file, we are using filebeat to read data from log files and pass it to logstash which later passes it to ElasticSearch where it get indexed in syntaxed JSON.<br>
-We are reading that indexed data in ElasticSearch using <b>elasticsearch-py API</b>. There is a limit to elasticsearch, it can only read maximum of 10000 lines at most at a time. So, for this we are using <b>scroll API</b>. We are scrolling all the data in elasticsearch for 10 minutes at a rate of 10000 at a time.
+[Filebeat](https://github.com/elastic/beats/tree/master/filebeat) is used to read data from log files, rather than reading directly from a file. Data that is read by Filebeat is passed to [Logstash](https://github.com/elastic/logstash), then to Elasticsearch where it gets indexed into JSON.
+
+Elasticsearch reads the indexed data using [elasticsearch-py API](https://github.com/elastic/elasticsearch-py). The search request is limited to reading a maximum of 10,000 lines at a time. To overcome this limit, the [scroll API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html) is used to retrieve large numbers of results from a single search request. Consumer-id tool is configured to scroll 10,000 lines per scroll for 10 minutes. 
 
 The flow of data is from a consumer-id in production.log to candlepin.log of Satellite logs.
 
